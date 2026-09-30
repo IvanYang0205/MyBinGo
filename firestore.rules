@@ -1,0 +1,88 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function docPath(p) { return path('/databases/' + database + '/documents/' + p); }
+    function isAdmin() { return signedIn() && exists(docPath('admins/' + request.auth.uid)); }
+    function drawn() { return get(docPath('game/state')).data.drawn; }
+    function tableOfToken(token) { return get(docPath('tables/' + token)).data.table; }
+    // 本次寫入完成後，這位使用者綁定的座位
+    function mySeatAfter() { return getAfter(docPath('users/' + request.auth.uid)).data.seat; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    // 管理員名單只能在 Firebase console 手動新增
+    match /admins/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+    }
+
+    match /game/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // 桌號 token：只能用 QR 上的 token 查詢，不能列出全部
+    match /tables/{token} {
+      allow get: if signedIn();
+      allow list, write: if isAdmin();
+    }
+
+    match /seats/{seatId} {
+      allow read: if signedIn();
+
+      // 賓客首次入座：token 必須屬於該桌，且同時建立 users 對應（一支手機一個座位）
+      allow create: if isAdmin() || (signedIn()
+        && request.resource.data.keys().hasOnly(['table', 'seat', 'uid', 'token', 'marks'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.marks == []
+        && request.resource.data.table is int
+        && request.resource.data.seat is int
+        && request.resource.data.seat >= 1 && request.resource.data.seat <= 10
+        && seatId == string(request.resource.data.table) + '-' + string(request.resource.data.seat)
+        && tableOfToken(request.resource.data.token) == request.resource.data.table
+        && mySeatAfter() == seatId);
+
+      allow update: if isAdmin() || (signedIn() && (
+        // 標記號碼：只能改自己的 marks，且只能標記已開出的號碼
+        (resource.data.uid == request.auth.uid
+          && changed().hasOnly(['marks'])
+          && request.resource.data.marks is list
+          && request.resource.data.marks.hasOnly(drawn()))
+        ||
+        // 後台解除綁定後重新入座
+        (resource.data.uid == null
+          && request.resource.data.uid == request.auth.uid
+          && changed().hasOnly(['uid', 'token'])
+          && tableOfToken(request.resource.data.token) == resource.data.table
+          && mySeatAfter() == seatId)));
+
+      allow delete: if isAdmin();
+    }
+
+    match /users/{uid} {
+      allow get: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow list: if isAdmin();
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['seat'])
+        && getAfter(docPath('seats/' + request.resource.data.seat)).data.uid == uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // 賓客送出 BINGO，由後台驗證後寫入 winners
+    match /claims/{seatId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'ts'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.ts == request.time
+        && get(docPath('seats/' + seatId)).data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /winners/{seatId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+  }
+}

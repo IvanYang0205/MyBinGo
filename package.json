@@ -1,0 +1,13 @@
+{
+  "name": "wedding-bingo",
+  "private": true,
+  "description": "婚禮數位賓果：賓客掃桌號 QR 入座，後台開號，大螢幕即時顯示",
+  "scripts": {
+    "emulators": "firebase emulators:start --only auth,firestore --project demo-bingo",
+    "seed": "node tools/seed-emulator.mjs",
+    "serve": "python -m http.server 5500"
+  },
+  "devDependencies": {
+    "firebase-tools": "^15.32.0"
+  }
+}

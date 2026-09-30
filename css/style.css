@@ -1,0 +1,241 @@
+:root{
+  --bg:#faf6f1; --surface:#ffffff; --surface-2:#f4ece4; --ink:#3b2f2b; --muted:#8c7c73; --line:#e8ddd3;
+  --accent:#b4536a; --accent-ink:#ffffff; --accent-soft:#f6e3e7;
+  --gold:#b98b3e; --gold-soft:#f5ead6;
+  --warn:#c77a2a; --warn-soft:#fbead6;
+  --info:#4a78a8; --info-soft:#e3ecf6;
+  --shadow:0 1px 2px rgba(60,40,30,.06),0 6px 20px rgba(60,40,30,.06);
+  --radius:16px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#191413; --surface:#241d1b; --surface-2:#2e2522; --ink:#f2e9e2; --muted:#a8978d; --line:#3a2f2b;
+    --accent:#e0869a; --accent-ink:#2a1016; --accent-soft:#44252c;
+    --gold:#dcb66f; --gold-soft:#3b3020;
+    --warn:#e6a35e; --warn-soft:#3d2c1a;
+    --info:#86aee0; --info-soft:#1e2a38;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#191413; --surface:#241d1b; --surface-2:#2e2522; --ink:#f2e9e2; --muted:#a8978d; --line:#3a2f2b;
+  --accent:#e0869a; --accent-ink:#2a1016; --accent-soft:#44252c;
+  --gold:#dcb66f; --gold-soft:#3b3020;
+  --warn:#e6a35e; --warn-soft:#3d2c1a;
+  --info:#86aee0; --info-soft:#1e2a38;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);min-height:100vh;
+  font-family:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  -webkit-tap-highlight-color:transparent;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.serif{font-family:"Noto Serif TC",serif}
+.muted{color:var(--muted)}
+
+
+/* 共用元件 */
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;font-weight:500}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.btn.danger{color:var(--accent);border-color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.ball{width:64px;height:64px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font:700 28px/1 "Noto Serif TC",serif;color:#fff;
+  background:radial-gradient(circle at 30% 28%,#ee9fb0 0%,#c65a73 40%,#8e3a4e 100%);
+  box-shadow:inset 0 -4px 8px rgba(0,0,0,.18),0 4px 12px rgba(180,83,106,.3)}
+.ball.empty{background:var(--surface-2);color:var(--muted);box-shadow:none}
+.pop{animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.3) rotate(-25deg);opacity:0}100%{transform:none;opacity:1}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);z-index:60;
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;
+  opacity:0;pointer-events:none;transition:.25s;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* 賓客頁 */
+.guest{max-width:460px;margin:0 auto;padding:20px 16px 48px}
+.g-head{text-align:center;margin-bottom:16px}
+.eyebrow{font-family:"Noto Serif TC",serif;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-size:12px;margin:0 0 6px}
+.g-head h1{font:700 24px "Noto Serif TC",serif;margin:0}
+.g-head p{margin:6px 0 0}
+.qr-sim{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;margin-bottom:16px;
+  border:1px dashed var(--gold);border-radius:12px;background:var(--gold-soft);font-size:13px;color:var(--gold)}
+.qr-sim select{padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
+.table-name{text-align:center;font:700 20px "Noto Serif TC",serif;margin:6px 0 12px}
+.seats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.seat{aspect-ratio:1;border-radius:14px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.seat b{font:700 26px "Noto Serif TC",serif}
+.seat small{font-size:11px;color:var(--muted)}
+.seat:disabled{opacity:.4;box-shadow:none;cursor:not-allowed}
+.hint{font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin:14px 0 0}
+.latest{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow)}
+.latest .t{font-size:13px;color:var(--muted)}
+.latest .v{font-weight:700;margin-top:2px}
+.progress{margin-left:auto;text-align:right}
+.dots{display:flex;gap:5px;justify-content:flex-end;margin-top:4px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line)}
+.dots i.on{background:var(--gold);border-color:var(--gold)}
+.card{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px;padding:10px;
+  background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow)}
+.card .hd{text-align:center;font:700 18px "Noto Serif TC",serif;color:var(--accent);padding:2px 0 4px}
+.cell{aspect-ratio:1;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;
+  font-size:22px;font-weight:700;display:grid;place-items:center;transition:transform .1s;padding:0}
+.cell:active{transform:scale(.93)}
+.cell.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.cell.in-line{box-shadow:inset 0 0 0 3px var(--gold)}
+.cell.free{background:var(--gold-soft);color:var(--gold);font-size:24px;cursor:default}
+.cell.nudge{border-color:var(--gold);animation:nudge 1.2s ease-in-out infinite}
+@keyframes nudge{50%{background:var(--gold-soft);box-shadow:0 0 0 3px var(--gold)}}
+.cell.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.bingo{width:100%;margin-top:16px;padding:16px;border:0;border-radius:999px;
+  font:700 26px "Noto Serif TC",serif;letter-spacing:.12em;color:#fff;
+  background:linear-gradient(135deg,#b4536a,#d18a5c);box-shadow:0 8px 24px rgba(180,83,106,.35)}
+.bingo:disabled{background:var(--surface-2);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.won{margin-top:16px;padding:16px;border-radius:var(--radius);text-align:center;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold)}
+.won b{display:block;font:700 22px "Noto Serif TC",serif;margin-bottom:4px}
+.history{margin-top:16px;font-size:14px}
+.history summary{cursor:pointer;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips span{min-width:34px;text-align:center;padding:4px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.chips span:first-child{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.linkbtn{display:block;margin:20px auto 0;background:none;border:0;color:var(--muted);font-size:12px;text-decoration:underline}
+
+/* 後台 */
+.admin{max-width:1180px;margin:0 auto;padding:20px 16px 48px;display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.admin-head{grid-column:1/-1;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.admin-head h1{font:700 24px "Noto Serif TC",serif;margin:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);min-width:0}
+.panel h2{font-size:15px;margin:0 0 12px;color:var(--muted);font-weight:500}
+.s4{grid-column:span 4}.s5{grid-column:span 5}.s7{grid-column:span 7}.s8{grid-column:span 8}
+@media (max-width:900px){.admin>.panel{grid-column:1/-1}}
+.draw-top{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.draw-top .ball{width:108px;height:108px;font-size:52px}
+.draw-top .big{font:700 20px "Noto Serif TC",serif}
+.draw-actions{display:grid;gap:8px}
+.draw-actions .primary{padding:14px;font-size:18px}
+.manual{display:flex;gap:8px}
+.manual input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:4px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{border-radius:12px;padding:12px;background:var(--surface-2)}
+.tile span{display:block;font-size:12px;color:var(--muted)}
+.tile b{font:700 30px "Noto Serif TC",serif}
+.tile small{color:var(--muted);margin-left:4px}
+.tile.warn{background:var(--warn-soft)}.tile.warn b{color:var(--warn)}
+.tile.accent{background:var(--accent-soft)}.tile.accent b{color:var(--accent)}
+.tile.gold{background:var(--gold-soft)}.tile.gold b{color:var(--gold)}
+.namelist{margin-top:12px;font-size:13px;line-height:1.7}
+.namelist dt{color:var(--muted);margin-top:6px}
+.namelist dd{margin:0}
+.winners{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:340px;overflow:auto}
+.winners li{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:12px;background:var(--surface-2)}
+.winners li.empty{color:var(--muted);justify-content:center}
+.winners .rank{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#fff;font-weight:700;font-size:14px}
+.winners .names{font-size:14px;margin-top:2px}
+.winners small{color:var(--muted)}
+.board{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+.board div{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;
+  background:var(--surface-2);color:var(--muted)}
+.board .on{background:var(--gold-soft);color:var(--gold)}
+.board .last{background:var(--accent);color:var(--accent-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-bottom:10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.seatmap{display:grid;gap:4px;max-height:420px;overflow:auto}
+.trow{display:grid;grid-template-columns:40px repeat(10,minmax(0,1fr));gap:4px;align-items:center}
+.trow>span{font-size:12px;color:var(--muted);text-align:right;padding-right:4px}
+.sq{height:24px;border-radius:6px;font-size:11px;padding:0;border:1px solid var(--line);background:var(--surface-2);color:var(--muted)}
+.sq.joined{background:var(--info-soft);color:var(--info);border-color:var(--info-soft)}
+.sq.reach{background:var(--warn-soft);color:var(--warn);border-color:var(--warn);font-weight:700}
+.sq.unclaimed{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.sq.won{background:var(--gold);color:#fff;border-color:var(--gold);font-weight:700}
+.sq.unbound{border-style:dashed;border-color:var(--muted)}
+.tools{display:grid;gap:10px}
+.tools .manual input{max-width:90px;flex:none}
+.tools hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+
+/* 大螢幕 */
+body.screen-page{background:#130e0f}
+.screen{min-height:100dvh;color:#f5ebe2;padding:3vh max(16px,3vw);
+  background:radial-gradient(1200px 600px at 15% 0%,#3d1b25 0%,transparent 60%),radial-gradient(900px 500px at 100% 100%,#2e2413 0%,transparent 60%),#130e0f;
+  display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:auto 1fr auto;gap:3vh 3vw}
+.sc-title{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.sc-title h1{margin:0;font:700 clamp(22px,3vw,52px) "Noto Serif TC",serif;color:#e8c987;letter-spacing:.2em}
+.sc-title span{font-size:clamp(14px,1.6vw,28px);color:rgba(245,235,226,.7)}
+.sc-left{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh}
+.sc-label{font-size:clamp(14px,1.6vw,28px);letter-spacing:.3em;color:rgba(245,235,226,.7)}
+.sc-ball{width:min(30vw,48vh);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  font:700 min(14vw,23vh)/1 "Noto Serif TC",serif;color:#fff;
+  background:radial-gradient(circle at 32% 28%,#f0a7b6 0%,#c65a73 38%,#7e2c40 100%);
+  box-shadow:0 0 0 min(1vw,1.5vh) rgba(232,201,135,.35),0 20px 60px rgba(0,0,0,.5)}
+.sc-ball.empty{background:#2a2022;color:rgba(245,235,226,.3)}
+.sc-count{font:600 clamp(16px,2vw,34px) "Noto Serif TC",serif;color:#e8c987}
+.sc-recent{display:flex;gap:1vw}
+.sc-recent span{width:clamp(34px,3.6vw,64px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  font:600 clamp(14px,1.5vw,28px) "Noto Serif TC",serif;border:1px solid rgba(232,201,135,.5);color:#e8c987}
+.sc-board{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:min(.9vw,1.4vh);align-content:center}
+.sc-board div{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  font:600 clamp(12px,1.9vw,38px) "Noto Serif TC",serif;color:rgba(245,235,226,.28);border:1px solid rgba(245,235,226,.12)}
+.sc-board .on{background:#e8c987;color:#2a1c10;border-color:transparent}
+.sc-board .last{background:#d9667f;color:#fff;border-color:transparent;box-shadow:0 0 0 4px rgba(217,102,127,.35)}
+.sc-foot{grid-column:1/-1;display:flex;gap:3vw;align-items:center;border-top:1px solid rgba(232,201,135,.25);padding-top:2vh;min-width:0}
+.sc-stats{display:flex;gap:2.5vw;flex:none}
+.sc-stats small{display:block;font-size:clamp(12px,1.2vw,22px);color:rgba(245,235,226,.6)}
+.sc-stats b{font:700 clamp(22px,3vw,54px) "Noto Serif TC",serif;color:#e8c987}
+.sc-winners{display:flex;flex-wrap:wrap;gap:.8vw;min-width:0}
+.sc-chip{padding:.5vh 1.2vw;border-radius:999px;background:rgba(232,201,135,.15);border:1px solid rgba(232,201,135,.5);
+  font-size:clamp(13px,1.5vw,28px);color:#f5ebe2}
+.sc-dim{color:rgba(245,235,226,.45);font-size:clamp(13px,1.5vw,28px)}
+@media (max-width:760px){.screen{grid-template-columns:1fr}.sc-foot{flex-direction:column;align-items:flex-start}}
+.overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(10,6,7,.8);
+  opacity:0;pointer-events:none;transition:opacity .3s;padding:16px}
+.overlay.show{opacity:1;pointer-events:auto}
+.overlay .box{text-align:center;color:#fff}
+.overlay h2{margin:0;font:700 clamp(56px,11vw,180px)/1.1 "Noto Serif TC",serif;color:#e8c987;letter-spacing:.08em}
+.overlay.show h2{animation:pop .8s cubic-bezier(.2,1.4,.4,1)}
+.modal{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:16px;background:rgba(20,12,12,.55)}
+.modal[hidden]{display:none}
+.dlg{width:100%;max-width:360px;background:var(--surface);color:var(--ink);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.dlg p{margin:0 0 16px;line-height:1.6;white-space:pre-line}
+.dlg-actions{display:flex;gap:8px;justify-content:flex-end}
+.btn:focus-visible,.cell:focus-visible,.seat:focus-visible,.sq:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.overlay p{font-size:clamp(20px,3.5vw,60px);margin:2vh 0 0}
+
+/* 訊息、登入 */
+.notice{max-width:420px;margin:15vh auto 0;padding:24px 16px;text-align:center}
+.notice h1{font:700 22px "Noto Serif TC",serif;margin:8px 0}
+.notice p{color:var(--muted);line-height:1.7}
+.login{max-width:360px;margin:12vh auto 0;padding:24px;display:grid;gap:12px}
+.login h1{font:700 24px "Noto Serif TC",serif;margin:0 0 4px}
+.login input{padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2)}
+.login .err{color:var(--accent);font-size:14px;min-height:1.2em;margin:0}
+.admin-nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.admin-nav a,.admin-nav button{font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+.pending{margin-top:16px;padding:16px;border-radius:var(--radius);text-align:center;background:var(--surface-2);color:var(--muted)}
+
+/* 桌號 QR 列印頁 */
+.qr-page{max-width:1000px;margin:0 auto;padding:20px 16px 48px}
+.qr-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.qr-bar h1{font:700 24px "Noto Serif TC",serif;margin:0 auto 0 0}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.qr-card{border:1px solid var(--line);border-radius:var(--radius);padding:16px;text-align:center;background:#fff;color:#3b2f2b;break-inside:avoid}
+.qr-card h2{font:700 22px "Noto Serif TC",serif;margin:0 0 4px}
+.qr-card p{margin:0 0 10px;font-size:13px;color:#8c7c73}
+.qr-card .qr{display:grid;place-items:center;min-height:180px}
+.qr-card small{display:block;margin-top:8px;font-size:10px;color:#8c7c73;word-break:break-all}
+@media print{
+  .qr-bar{display:none}
+  body{background:#fff}
+  .qr-page{padding:0;max-width:none}
+  .qr-grid{grid-template-columns:repeat(3,1fr)}
+}
